@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Sumett Ampornsak">
+    <title>ภาพจำลองมุมมองฟิล์มติดรถยนต์</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link
+      rel="icon"
+      href="https://i.ibb.co/F6mSzVX/sport-car-8648818.png"
+      type="image/x-icon"
+    />
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .car-window {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: url('https://i.ibb.co/dW8W6H1/istockphoto-657346440-612x612.jpg') center/cover no-repeat;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .view {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: filter 0.3s ease;
+        }
+
+        .window-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .envi-buttons {
+            margin-top: -12px;
+            margin-bottom: 2px;
+            display: inline-block;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tint-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        button {
+            font-family: 'Kanit', sans-serif;
+            margin: 5px;
+            padding: 20px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        input[type="range"] {
+            width: 80%;
+            margin-bottom: 5px;
+        }
+
+        .fa-sun, .fa-moon {
+            font-size: 1.5rem;
+            padding-right: 8px;
+        }
+
+        footer {
+            width: 100%;
+            background-color: white;
+            color: #000;
+            text-align: center;
+            padding: 5px 0;
+            position: fixed;
+            bottom: 0;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        span {
+            color: red;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .car-window {
+                height: 200px;
+            }
+
+            .controls {
+                margin-top: 10px;
+            }
+
+            button {
+                font-size: 0.9rem;
+                padding: 15px;
+            }
+
+            .envi-buttons {
+                max-width: 90%;
+            }
+
+            input[type="range"] {
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .car-window {
+                height: 180px;
+            }
+
+            button {
+                font-size: 0.8rem;
+                padding: 12px;
+            }
+
+            .controls {
+                margin-top: 15px;
+            }
+
+            .envi-buttons {
+                max-width: 100%;
+            }
+
+            input[type="range"] {
+                width: 90%;
+            }
+
+            footer {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ภาพจำลองมุมมองฟิล์มติดรถยนต์</h1>
+        <p><span>คำเตือน : </span>ภาพที่เห็นเป็นเพียงการจำลองเท่านั้น ไม่สามารถนำไปอ้างอิงใดๆได้</p>
+        <div class="envi-buttons">
+            <button onclick="updateEnvironment('day')"><i class="fas fa-sun"></i> กลางวัน</button>
+            <button onclick="updateEnvironment('night')"><i class="fas fa-moon"></i> กลางคืน</button>
+        </div>
+        <div class="car-window">
+            <div class="view">
+                <div class="window-overlay" id="tint"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <p class="tint-value">ความเข้มฟิล์ม: <span id="tint-value">0</span>%</p>
+            <input type="range" id="tint-range" min="0" max="100" value="0" oninput="updateTint(this.value)">
+            <div>
+                <button onclick="setTint(0)">0%</button>
+                <button onclick="setTint(30)">30%</button>
+                <button onclick="setTint(40)">40%</button>
+                <button onclick="setTint(60)">60%</button>
+                <button onclick="setTint(80)">80%</button>
+                <br>
+                <br><br>
+                <br><br><br><br>
+            </div>
+        </div>
+    </div>
+    <script>
+        function updateTint(value) {
+            const tintElement = document.getElementById('tint');
+            const tintValueElement = document.getElementById('tint-value');
+            tintElement.style.background = `rgba(0, 0, 0, ${value / 100})`;
+            tintValueElement.textContent = value;
+            document.getElementById('tint-range').value = value;
+
+            // Adjust the brightness of the image
+            const viewElement = document.querySelector('.view');
+            const brightness = 1 + (value / 100); // Increase brightness from 1 (normal) to 2 (brighter)
+            viewElement.style.filter = `brightness(${brightness})`;
+        }
+
+        function setTint(value) {
+            updateTint(value);
+        }
+
+        function updateEnvironment(value) {
+            const viewElement = document.querySelector('.view');
+            let backgroundUrl;
+
+            switch (value) {
+                case 'day':
+                    backgroundUrl = 'https://i.ibb.co/dW8W6H1/istockphoto-657346440-612x612.jpg';
+                    break;
+                case 'night':
+                    backgroundUrl = 'https://i.ibb.co/fYm7B64/1748-ED90-A757-11-EF-9-D78-0-AFFEE8-F7-D57.jpg';
+                    break;
+            }
+
+            viewElement.style.background = `url('${backgroundUrl}') center/cover no-repeat`;
+        }
+    </script>
+    <footer>
+        <p>&copy; Sumett Ampornsak 2024</p>
+        <p><a href="mailto:Sumett13ampornsak@gmail.com">Sumett13ampornsak@gmail.com</a></p>
+    </footer>
+</body>
+</html>
